@@ -6,7 +6,8 @@
 }
 
 html {
-    height: 100%;
+    min-height: 100%;
+    height: auto;
 }
 
 body, head {
@@ -34,13 +35,13 @@ body, head {
     font-family: sans-serif;
     display: flex;
     justify-content: center;
-    background-image: url(../images/intranet2.jpg);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: scroll;
     gap: 20px;
     flex-wrap: wrap;
+}
+
+.full-width {
+    flex: 1 1 100%;
+    text-align: center;
 }
 
 h1, h2 {
@@ -48,7 +49,7 @@ h1, h2 {
 	padding: 30px 0;
 	margin: 0;
 	font-size: 48px;
-    color: rgb(61, 61, 61);
+    color: black;
 	text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
 }
 
@@ -56,7 +57,7 @@ h1, h2 {
     text-align: center;
 	margin: 0;
 	font-size: 20px;
-    color: rgb(61, 61, 61);
+    color: white;
 	text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
 
 }
@@ -83,21 +84,29 @@ h1, h2 {
     padding: 40px 30px;
     border-radius: 10px;
     font-family: 'Segoe UI', sans-serif;
+    background-color: rgba(255, 255, 255, 0.4);
 }
 
 .edit_info h1 {
     margin-bottom: 20px;
     font-weight: 600;
-    color: rgb(46, 46, 46);
+    color: black;
 }
 
 .edit_info label {
     display: block;
     margin-bottom: 5px;
     font-weight: 600;
-    color: rgb(27, 27, 27);
+    color: linear-gradient(to bottom, white, black);
     text-align: left;
     width: 100%;
+}
+
+.edit_info ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
 }
 
 .edit_info select {
@@ -130,12 +139,13 @@ h1, h2 {
     background-color: #007bff;
     border: none;
     border-radius: 5px;
-    color: rgb(46, 46, 46);
+    color: rgb(255, 255, 255);
     transition: background-color 0.3s ease;
 }
 
 .edit_info button.btn-primary:hover {
     background-color: #0056b3;
+    color: rgb(100, 100, 100);;
 }
 
 .back-link {
@@ -165,7 +175,7 @@ form {
 } 
 .form_login {
     text-align: center;
-    color: rgb(49, 12, 12);
+    color: black;
 }
 
 
@@ -175,11 +185,6 @@ form {
     border-radius: 4px;
     border: 1px solid #ccc;
     background-color: rgba(255, 255, 255, 0.6);
-}
-
-.user_name {
-    color: #53989e;
-
 }
 
 .example-wrapper code {
@@ -201,26 +206,20 @@ form {
     padding: 5px 30px;
     border-radius: 5px;
     font-family: 'Segoe UI', sans-serif;
-}
-
-.checkbox-group {
-	margin-bottom: 0.5em;
-	display:grid;
-	grid-template-areas:
-		"input label";
+    background-color: rgba(255, 255, 255, 0.4);
 }
 
 .example-wrapper h1 {
     margin-bottom: 20px;
     font-weight: 600;
-    color: rgb(106, 204, 221);
+    color: black
 }
 
 .example-wrapper label {
     display: block;
     margin-bottom: 5px;
     font-weight: 600;
-    color: rgb(106, 204, 221);
+    color: black;
     text-align: left;
     width: 100%;
 }
@@ -274,6 +273,57 @@ form {
     background-color: #0056b3;
 }
 
+.remove-event {
+    margin-top:10px;
+    gap: 20px;
+    max-width: 1200px;
+    max-height: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px 30px;
+    border-radius: 5px;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.remove-event button.btn-primary {
+    width: 100%;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.remove-event button.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.remove-event h1 {
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: black
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align children (checkboxes + labels) to the left */
+    text-align: left;
+    border-color: solid blue 2px;
+}
+
+.checkbox-group label {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+    margin-bottom: 10px;
+}
+
+
 .back-link {
     margin-top: 15px;
     display: inline-block;
@@ -297,6 +347,15 @@ form {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
+.user_info img {
+    height: 100%;
+    max-height: 155px;
+    object-fit: cover;
+    margin: 4px;
+    border-radius: 8px; /* optional for rounded corners */
+}
+
+
 .pick_and_name {
     flex: 1;
     display: flex;
@@ -316,12 +375,25 @@ form {
     margin: 0;
     font-size: 24px;
     padding-left: 10px;
+    color: #53989e;
+}
+
+.levelBar p {
+    margin-bottom: 10px;
+    font-size: 18px;
+    padding-left: 10px;
+    color: #53989e;
 }
 
 .info {
     flex: 1;
-    text-align: center;
+    text-align: left;
     padding-top: 10px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    border-radius: 10px;
 }
 
 .info ul {
@@ -331,8 +403,8 @@ form {
 }
 
 .info li {
-    color: rgb(255, 255, 255);
-    margin-bottom: 5px;
+    color: #53989e;;
+    margin-bottom: 10px;
 }
 
 /* === AGENDA + TBD SECTION === */
@@ -357,7 +429,7 @@ button {
   margin: 10px;
   border: none;
   border-radius: 25px;
-  background: linear-gradient(to bottom, #5dd39e, #3fbf7f);
+  background: linear-gradient(to bottom, #111ed3, #4f4ddd);
   color: white;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -776,6 +848,23 @@ button:hover {
     margin: 0;
 }
 
+.notification-link {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.notification-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.notification-time {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+}
+
 .mark-all-read-btn {
     background: #28a745 !important;
     color: white !important;
@@ -814,6 +903,69 @@ button:hover {
     text-align: center !important;
     color: #666 !important;
     margin: 0 !important;
+}
+
+/* New notification styles */
+.notification-new {
+    background: linear-gradient(90deg, rgba(40, 167, 69, 0.1) 0%, rgba(40, 167, 69, 0.05) 100%) !important;
+    border-left: 3px solid #28a745 !important;
+    animation: notificationFadeIn 0.5s ease-out;
+}
+
+.notification-new .notification-content {
+    position: relative;
+}
+
+.notification-new .notification-content::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background-color: #28a745;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes notificationFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: translateY(-50%) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-50%) scale(1.2);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(-50%) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Bell shake animation */
+@keyframes bellShake {
+    0% { transform: rotate(0deg); }
+    10% { transform: rotate(10deg); }
+    20% { transform: rotate(-8deg); }
+    30% { transform: rotate(6deg); }
+    40% { transform: rotate(-4deg); }
+    50% { transform: rotate(2deg); }
+    60% { transform: rotate(-1deg); }
+    70% { transform: rotate(0deg); }
+    100% { transform: rotate(0deg); }
 }
 
 /* ===== Responsive Design Enhancements ===== */
@@ -914,4 +1066,33 @@ button:hover {
         font-size: 16px;
         text-align: center;
     }
+}
+
+/* xp bar */
+
+.xp-bar-container {
+    margin-top: 10px;
+    width: 100%;
+    max-width: 200px;
+}
+
+.xp-bar {
+    width: 100%;
+    background-color: #ddd;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 12px;
+    margin-bottom: 4px;
+}
+
+.xp-fill {
+    height: 100%;
+    background: linear-gradient(to right, #4caf50, #81c784);
+    transition: width 0.4s ease-in-out;
+}
+
+.xp-text {
+    font-size: 12px;
+    color: #333;
+    text-align: center;
 }
