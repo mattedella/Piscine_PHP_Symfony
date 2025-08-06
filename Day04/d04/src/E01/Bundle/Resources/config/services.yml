@@ -1,0 +1,6 @@
+services:
+    # e01.example:
+      # class: E01\Bundle\Example
+      # arguments: ["@service_id", "plain_value", "%parameter%"]
+      # parameters: ["controller", "routing", "templating", "doctrine", "testing", "validation", "forms", "security", "cache", "translations", "services"]
+  

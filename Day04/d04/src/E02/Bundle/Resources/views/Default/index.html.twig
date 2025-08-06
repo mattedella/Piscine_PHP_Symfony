@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Form</title>
+    </head>
+    <body>
+        <h1>Contact Form</h1>
+        {{ form_start(form) }}
+            {{ form_row(form.message) }}
+            {{ form_row(form.timestamp) }}
+            <button type="submit">Send</button>
+        {{ form_end(form) }}
+    </body>
+</html>

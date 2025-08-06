@@ -1,0 +1,19 @@
+{
+    "name": "matteo/weather",
+    "description": "A simple weather application",
+    "type": "project",
+    "require": {
+        "php": ">=5.5.0",
+        "monolog/monolog": "1.20.0",
+        "tcdent/php-restclient": "0.1.7"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Matteo\\Weather\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}

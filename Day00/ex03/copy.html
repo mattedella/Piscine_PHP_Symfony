@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Copy</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="style.css">
+		<style>
+			.Table {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+			}
+			.Bar {
+				width: 45%;
+				padding: 20px;
+			}
+			label, span {
+				font-weight: bold;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="Table">
+			<div class="Bar">
+			<h2>Frontend</h2>
+			<ul>
+				<li style="float: none; width: 100%">
+					<label for="html">HTML5
+					<div style="position: relative;">
+						<progress id="html5" class="html5" value="80" max="100" style="width: 100%; height: 20px;"></progress>
+						<span style="
+							position: absolute;
+							left: 70%;
+							top: -22px;
+						">80%</span>
+					</div>
+					</label>
+				</li>
+				<li style="float: none;  width: 100%; margin-bottom: 0;">
+					<label for="html">CSS3
+					<div style="position: relative;">
+						<progress id="html5" class="html5" value="60" max="100" style="width: 100%; height: 20px;"></progress>
+						<span style="
+							position: absolute;
+							left: 50%;
+							top: -22px;
+						">60%</span>
+					</div>
+					</label>
+				</li>
+				<li style="float: none;  width: 100%">
+					<label for="html">jQuerry
+						<div style="position: relative;">
+							<progress id="html5" class="html5" value="50" max="100" style="width: 100%; height: 20px;"></progress>
+							<span style="
+								position: absolute;
+								left: 40%;
+								top: -22px;
+							">50%</span>
+						</div>
+					</label>
+				</li>
+			</ul>
+			</div>
+			<div class="Bar">
+				<h2>Backend</h2>
+				<ul>
+					<li style="float: none;  width: 100%">
+						<label for="html">Python
+						<div style="position: relative;">
+							<progress id="html5" class="html5" value="75" max="100" style="width: 100%; height: 20px;"></progress>
+							<span style="
+								position: absolute;
+								left: 65%;
+								top: -22px;
+							">75%</span>
+						</div>
+					</label>
+					</li>
+					<li style="float: none;  width: 100%; margin-bottom: 0;">
+						<label for="html" >PHP
+							<div style="position: relative;">
+								<progress id="html5" class="html5" value="65" max="100" style="width: 100%; height: 20px;"></progress>
+								<span style="
+									position: absolute;
+									left: 55%;
+									top: -22px;
+								">65%</span>
+							</div>
+					</label>
+					</li>
+					<li style="float: none;  width: 100%">
+						<label for="html" >Node.js
+							<div style="position: relative;">
+								<progress id="html5" class="html5" value="35" max="100" style="width: 100%; height: 20px;"></progress>
+								<span style="
+									position: absolute;
+									left: 25%;
+									top: -22px;
+								">35%</span>
+							</div>
+						</label>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>

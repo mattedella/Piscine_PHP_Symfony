@@ -1,0 +1,36 @@
+{# filepath: /home/mdella-r/Desktop/PHP_Piscine/Day04/d04/src/E03/Bundle/Resources/views/Default/index.html.twig #}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Color Shade</title>
+    <head>
+    <body>
+        <h1>Shade of Color</h1>
+        <table border="1" cellspacing="0" cellpadding="0">
+            <tr>
+                {% for color in colors %}
+                    <th>{{ color|capitalize }}</th>
+                {% endfor %}
+            </tr>
+            {% for i in 1..nbrColor %}
+            <tr>
+                {% for color in colors %}
+                    {# Calculate shade: alpha goes from 0.3 to 1.0 #}
+                    {% set alpha = 0.3 + (0.7 * (i - 1) / (nbrColor - 1)) %}
+                    <td style="height:40px; width:80px; background-color:rgba(
+                        {% if color == 'black' %}
+                            0,0,0,{{ alpha }}
+                        {% elseif color == 'red' %}
+                            255,0,0,{{ alpha }}
+                        {% elseif color == 'blue' %}
+                            0,0,255,{{ alpha }}
+                        {% elseif color == 'green' %}
+                            0,128,0,{{ alpha }}
+                        {% endif %}
+                    );"></td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </table>
+    </body>
+</html>
