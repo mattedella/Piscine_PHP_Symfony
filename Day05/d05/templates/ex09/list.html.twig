@@ -1,0 +1,38 @@
+<h2>Person List with Address and Bank Account</h2>
+
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Birthdate</th>
+            <th>Marital Status</th>
+            <th>Address</th>
+            <th>Bank Account</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for person in persons %}
+            <tr>
+                <td>{{ person.name }}</td>
+                <td>{{ person.birthdate ? person.birthdate|date('Y-m-d') : 'N/A' }}</td>
+                <td>{{ person.maritalStatus ?: 'N/A' }}</td>
+
+                <td>
+                    {% for address in person.addresses %}
+                        {{ address.addresses }}<br>
+                    {% else %}
+                        No address
+                    {% endfor %}
+                </td>
+
+                <td>
+                    {% if person.bankAccount %}
+                        {{ person.bankAccount.iban }}
+                    {% else %}
+                        No bank account
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

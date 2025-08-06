@@ -1,0 +1,18 @@
+<h1>User Form</h1>
+
+<form method="POST" action="{{ path('ex08_execute') }}">
+    Username: <input name="username"><br>
+    Name: <input name="name"><br>
+    Email: <input name="email"><br>
+    Birthdate: <input type="date" name="birthdate"><br>
+    Enable: <input type="checkbox" name="enable"><br>
+    Marital Status:
+    <select name="marital_status">
+        <option value="single">Single</option>
+        <option value="married">Married</option>
+        <option value="widower">Widower</option>
+    </select><br>
+    <button type="submit">Submit</button>
+</form>
+
+<a href="{{ path('ex08_show') }}">View All Users</a>

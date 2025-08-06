@@ -1,0 +1,22 @@
+<h1>Users List</h1>
+
+{% if message %}
+    <p>{{ message }}</p>
+{% endif %}
+
+<table border="1" cellpadding="8">
+    <tr>
+        <th>ID</th><th>Username</th><th>Name</th><th>Email</th>
+        <th>Enabled</th><th>Birthdate</th><th>Marital State</th>
+    </tr>
+    {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.enable ? 'Yes' : 'No' }}</td>
+            <td>{{ user.birthdate }}</td>
+            <td>{{ user.marital_status }}</td>
+    {% endfor %}
+</table>

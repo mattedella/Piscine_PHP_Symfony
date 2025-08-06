@@ -1,0 +1,34 @@
+<h2>Person Details</h2>
+
+{% if person %}
+    <ul>
+        <li><strong>ID:</strong> {{ person.id }}</li>
+        <li><strong>Name:</strong> {{ person.name }}</li>
+        <li><strong>Email:</strong> {{ person.email }}</li>
+        <li><strong>Birthdate:</strong> {{ person.birthdate|date('d-m-Y') }}</li>
+        <li><strong>Enable:</strong> {{ person.enable ? 'Yes' : 'No' }}</li>
+        <li><strong>Marital Status:</strong> {{ person.marital_status }}</li>
+    </ul>
+
+    <h3>Bank Account</h3>
+    {% if bank_account %}
+        <ul>
+            <li><strong>Iban:</strong> {{bank_account.iban}}</li>
+        </ul>
+    {% else %}
+        <p>❌ No bank account found.</p>
+    {% endif %}
+
+    <h3>Addresses</h3>
+    {% if addresses is not empty %}
+        <ul>
+            {% for address in addresses %}
+                <li>{{ address.address }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>❌ No addresses found.</p>
+    {% endif %}
+{% else %}
+    <p>❌ Person not found.</p>
+{% endif %}

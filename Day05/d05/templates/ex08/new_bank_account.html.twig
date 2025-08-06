@@ -1,0 +1,7 @@
+<h2>New Bank Account</h2>
+
+<form action="{{ path('ex08_insert_bank_account') }}" method="post">
+    <label>IBAN: <input type="number" name="iban" required></label><br>
+    <label>Person ID: <input type="number" name="person_id" required></label><br>
+    <button type="submit">Create Bank Account</button>
+</form>

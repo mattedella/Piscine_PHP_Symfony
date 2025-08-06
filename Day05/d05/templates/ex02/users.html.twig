@@ -1,0 +1,28 @@
+<h1>All Users</h1>
+
+<table border="1" cellpadding="5">
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Enabled</th>
+        <th>Birthdate</th>
+        <th>Address</th>
+    </tr>
+    {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.enable ? 'Yes' : 'No' }}</td>
+            <td>{{ user.birthdate }}</td>
+            <td>{{ user.address }}</td>
+        </tr>
+    {% else %}
+        <tr><td colspan="7">No users found.</td></tr>
+    {% endfor %}
+</table>
+
+<a href="{{ path('ex02_form') }}">Back to form</a>

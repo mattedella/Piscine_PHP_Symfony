@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} | Main Page
+{% endblock %}
+
+{% block body %}
+
+    <h1>Welcome to 24 School</h1>
+    
+    {% if app.user %}
+        <button><a href="{{ path('userpage', { id: app.user.id }) }}">Go to Profile</a></button>
+    {% else %}
+        <button><a href="{{ path('app_login') }}">Login</a></button>
+    {% endif %}
+
+{% endblock %}
+

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ex05 - ORM Delete</title>
+</head>
+<body>
+    <h1>Users Table (ORM)</h1>
+
+    {% if message %}
+        <p><strong>{{ message }}</strong></p>
+    {% endif %}
+
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Enable</th>
+            <th>Birthdate</th>
+            <th>Address</th>
+            <th>Action</th>
+        </tr>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.enable ? 'Yes' : 'No' }}</td>
+                <td>{{ user.birthdate|date('Y-m-d') }}</td>
+                <td>{{ user.address }}</td>
+                <td>
+                    <a href="{{ path('ex05_delete', { id: user.id }) }}"
+                       onclick="return confirm('Delete this user?');">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="8">No users found.</td></tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

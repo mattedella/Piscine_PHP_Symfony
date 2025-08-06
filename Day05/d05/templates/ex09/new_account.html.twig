@@ -1,0 +1,21 @@
+<h2>Add Bank Account</h2>
+
+{% if app.request.get('success') %}
+    <p style="color: green;">{{ app.request.get('success') }}</p>
+{% elseif app.request.get('error') %}
+    <p style="color: red;">{{ app.request.get('error') }}</p>
+{% endif %}
+
+<form method="POST" action="{{ path('ex09_insert_account') }}">
+    <label>Iban:</label>
+    <input type="text" name="iban" required><br>
+
+    <label>Person:</label>
+    <select name="person_id">
+        {% for person in persons %}
+            <option value="{{ person.id }}">{{ person.name }}</option>
+        {% endfor %}
+    </select><br>
+
+    <button type="submit">Add Bank Account</button>
+</form>

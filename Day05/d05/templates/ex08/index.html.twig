@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create Table{% endblock %}
+
+{% block body %}
+    <div style="padding: 20px;">
+        <h1>Create Users Table</h1>
+
+        <a href="{{ path('ex08_create_table') }}" class="btn btn-primary">Create Table</a>
+
+        {% if message is defined %}
+            <div style="margin-top: 20px; color: {{ message starts with '✅' ? 'green' : 'red' }};">
+                {{ message }}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

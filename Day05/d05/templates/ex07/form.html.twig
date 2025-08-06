@@ -1,0 +1,13 @@
+<h1>User Form (ORM)</h1>
+
+<form action="{{ path('ex07_submit') }}" method="post">
+    <label>Username: <input type="text" name="username" required></label><br>
+    <label>Name: <input type="text" name="name" required></label><br>
+    <label>Email: <input type="email" name="email" required></label><br>
+    <label>Enabled: <input type="checkbox" name="enable"></label><br>
+    <label>Birthdate: <input type="datetime-local" name="birthdate" required></label><br>
+    <label>Address: <textarea name="address" required></textarea></label><br>
+    <button type="submit">Submit</button>
+</form>
+
+<a href="{{ path('ex07_show') }}">View All Users</a>

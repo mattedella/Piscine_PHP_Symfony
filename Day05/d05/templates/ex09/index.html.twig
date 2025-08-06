@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create ORM Table{% endblock %}
+
+{% block body %}
+    <h1>Create User Table via ORM</h1>
+
+    <a href="{{ path('ex09_create_table') }}" class="btn btn-primary">Create Table</a>
+
+    {% if message is defined %}
+        <div style="margin-top: 20px; color: {{ message starts with '✅' ? 'green' : 'red' }}">
+            {{ message }}
+        </div>
+    {% endif %}
+{% endblock %}

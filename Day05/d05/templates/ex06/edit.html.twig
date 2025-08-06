@@ -1,0 +1,11 @@
+<h1>Edit User #{{ user.id }}</h1>
+
+<form method="POST" action="{{ path('ex06_update', {id: user.id}) }}">
+    <label>Username: <input type="text" name="username" value="{{ user.username }}"></label><br>
+    <label>Name: <input type="text" name="name" value="{{ user.name }}"></label><br>
+    <label>Email: <input type="email" name="email" value="{{ user.email }}"></label><br>
+    <label>Enable: <input type="checkbox" name="enable" {% if user.enable %}checked{% endif %}></label><br>
+    <label>Birthdate: <input type="datetime-local" name="birthdate" value="{{ user.birthdate|date('Y-m-d\TH:i') }}"></label><br>
+    <label>Address: <textarea name="address">{{ user.address }}</textarea></label><br>
+    <button type="submit">Update</button>
+</form>
