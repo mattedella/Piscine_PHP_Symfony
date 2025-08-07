@@ -12,8 +12,8 @@ Each exercise is organized into its own directory or controller prefix (e.g. `ex
 
 | Exercise      | Symfony Version | PHP Version | Topics               |
 |--------------:|:---------------:|:-----------:|:--------------------:|
-| Day00         | NONE            | NONE        | HTML Basic           |
-| Day01 - Day03 | NONE            | PHP 5.6     | Basic of PHP         |
+| Day00         | NONE            | NONE        | Basics of HTML       |
+| Day01 - Day03 | NONE            | PHP 5.6     | Basics of PHP        |
 | Day04         | Symfony 2.8     | PHP 5.6     | Basic of Symfony     |
 | Day05         | Symfony 6.4     | PHP 8.3     | raw SQL vs ORM       |
 | Rush01        | Symfony 6.4     | PHP 8.3     | creating an intranet |
