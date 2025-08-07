@@ -1,11 +1,8 @@
-// Verifica che la funzione openChat sia già stata definita nel template
 if (typeof window.openChat !== 'function') {
     console.warn('openChat function not defined in template, defining fallback');
-    // Definizione di fallback della funzione globale openChat
     window.openChat = function(recipientId, recipientName) {
         console.log('openChat (fallback) called with:', recipientId, recipientName);
         
-        // Funzione di supporto per tentare l'apertura della chat
         function attemptOpenChat() {
             if (window.mainChatInstance) {
                 console.log('MainChat instance found, starting chat');
@@ -15,22 +12,17 @@ if (typeof window.openChat !== 'function') {
             console.warn('MainChat instance not yet available');
             return false;
         }
-        
-        // Prova subito
         if (attemptOpenChat()) {
             return;
         }
         
-        // Se non riesce, aspetta che il DOM sia pronto
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(attemptOpenChat, 200);
             });
         } else {
-            // DOM già pronto, aspetta un po' di più per l'inizializzazione
             setTimeout(function() {
                 if (!attemptOpenChat()) {
-                    // Ultimo tentativo dopo un delay maggiore
                     setTimeout(attemptOpenChat, 500);
                 }
             }, 200);
@@ -38,7 +30,6 @@ if (typeof window.openChat !== 'function') {
     };
 }
 
-// Verifica che la funzione sia stata definita correttamente
 console.log('openChat function defined:', typeof window.openChat === 'function');
 
 class MainChat {
@@ -60,7 +51,9 @@ class MainChat {
             }, 500);
         }
 
-        // Controllo sicuro per i tab buttons
+        // Inizializza l'header con il messaggio di default
+        this.renderChatHeader('Select a conversation', null, 'none');
+
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const tabName = e.target.dataset.tab;
@@ -82,7 +75,6 @@ class MainChat {
             });
         });
 
-        // Controllo sicuro per user search
         const userSearchElement = document.getElementById('user-search');
         if (userSearchElement) {
             userSearchElement.addEventListener('input', (e) => {
@@ -98,7 +90,6 @@ class MainChat {
             });
         }
 
-        // Controllo sicuro per chat form
         const chatFormElement = document.getElementById('chat-form');
         if (chatFormElement) {
             chatFormElement.addEventListener('submit', (e) => {
@@ -107,7 +98,6 @@ class MainChat {
             });
         }
 
-        // Controllo sicuro per media button
         const mediaBtnElement = document.getElementById('media-btn');
         if (mediaBtnElement) {
             mediaBtnElement.addEventListener('click', () => {
@@ -118,7 +108,6 @@ class MainChat {
             });
         }
 
-        // Controllo sicuro per media input
         const mediaInputElement = document.getElementById('media-input');
         if (mediaInputElement) {
             mediaInputElement.addEventListener('change', (e) => {
@@ -192,7 +181,7 @@ class MainChat {
     }
 
     loadConversations() {
-        console.log('loadConversations called');
+        console.log('loadConversations called - avatar removed version');
         return fetch('/chat/api/conversations')
             .then(response => {
                 console.log('Conversations API response status:', response.status);
@@ -231,26 +220,34 @@ class MainChat {
                     const unreadBadge = conversation.unreadCount > 0 
                         ? `<span class="unread-badge">${conversation.unreadCount}</span>` 
                         : '';
-                    
-                    const avatar = conversation.avatar 
-                        ? `<img src="${conversation.avatar}" alt="Avatar" class="conversation-avatar">` 
-                        : `<div class="conversation-avatar-placeholder">${conversation.name.charAt(0).toUpperCase()}</div>`;
+                    console.log('Rendering conversation with avatar:', conversation.name);
+                
+                    let avatarElement = '';
+                    if (conversation.type === 'private' && conversation.avatar) {
+                        avatarElement = `<img src="${conversation.avatar}" alt="${conversation.name}" class="conversation-avatar">`;
+                    } else if (conversation.type === 'private') {
+                        const initials = conversation.name.split(' ').map(word => word[0]).join('').toUpperCase();
+                        avatarElement = `<div class="conversation-avatar-placeholder">${initials}</div>`;
+                    } else {
+                        avatarElement = `<div class="conversation-avatar-placeholder">📂</div>`;
+                    }
                     
                     return `
                         <div class="conversation-item ${conversation.unreadCount > 0 ? 'unread' : ''}" 
                              data-type="${conversation.type}" 
                              data-id="${conversation.id}">
-                            ${avatar}
+                            ${avatarElement}
                             <div class="conversation-info">
                                 <div class="conversation-header">
-                                    <span class="conversation-name">${conversation.name}</span>
-                                    <span class="conversation-time">${timeStr}</span>
+                                    <strong class="conversation-name">${conversation.name}</strong>
                                     ${unreadBadge}
                                 </div>
                                 <div class="conversation-preview">
                                     ${conversation.lastMessage || 'No messages yet'}
                                 </div>
-                                ${conversation.email ? `<small class="conversation-email">${conversation.email}</small>` : ''}
+                                <div class="conversation-meta">
+                                    <span class="conversation-time">${timeStr}</span>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -356,21 +353,8 @@ class MainChat {
         
         this.updateConversationReadStatus(userId);
         
-        fetch('/api/search/users?q=')
-            .then(response => response.json())
-            .then(users => {
-                const user = users.find(u => u.id == userId);
-                if (user) {
-                    const chatHeader = document.getElementById('chat-header');
-                    if (chatHeader) {
-                        chatHeader.textContent = `${user.firstName} ${user.lastName}`;
-                        console.log('Updated chat header for:', user.firstName, user.lastName);
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching user info:', error);
-            });
+        // Aggiorna l'header della chat con avatar e nome
+        this.updateChatHeader(userId, 'private');
     }
 
     startProjectChat(projectId) {
@@ -399,11 +383,8 @@ class MainChat {
         
         this.startPolling();
         
-        // Update chat header with project name
-        const chatHeader = document.getElementById('chat-header');
-        if (chatHeader) {
-            chatHeader.textContent = `Project Chat #${projectId}`;
-        }
+        // Aggiorna l'header della chat per il progetto
+        this.updateChatHeader(projectId, 'project');
     }
 
     updateConversationReadStatus(userId) {
@@ -414,6 +395,91 @@ class MainChat {
             if (unreadBadge) {
                 unreadBadge.remove();
             }
+        }
+    }
+
+    updateChatHeader(id, type) {
+        const chatHeader = document.getElementById('chat-header');
+        if (!chatHeader) {
+            console.warn('chat-header element not found');
+            return;
+        }
+
+        if (type === 'private') {
+            // Per chat private, cerca le informazioni dell'utente dalle conversazioni
+            fetch('/chat/api/conversations')
+                .then(response => response.json())
+                .then(conversations => {
+                    const conversation = conversations.find(c => c.type === 'private' && c.id == id);
+                    if (conversation) {
+                        this.renderChatHeader(conversation.name, conversation.avatar, 'private');
+                    } else {
+                        // Fallback: cerca nelle API degli utenti
+                        return fetch('/api/search/users?q=');
+                    }
+                })
+                .then(response => {
+                    if (response) {
+                        return response.json();
+                    }
+                    return null;
+                })
+                .then(users => {
+                    if (users) {
+                        const user = users.find(u => u.id == id);
+                        if (user) {
+                            this.renderChatHeader(`${user.firstName} ${user.lastName}`, null, 'private');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching user info:', error);
+                    this.renderChatHeader('Select a conversation', null, 'none');
+                });
+        } else if (type === 'project') {
+            // Per chat di progetto
+            fetch('/chat/api/conversations')
+                .then(response => response.json())
+                .then(conversations => {
+                    const conversation = conversations.find(c => c.type === 'project' && c.id == id);
+                    if (conversation) {
+                        this.renderChatHeader(conversation.name, null, 'project');
+                    } else {
+                        this.renderChatHeader(`Project Chat #${id}`, null, 'project');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching project info:', error);
+                    this.renderChatHeader(`Project Chat #${id}`, null, 'project');
+                });
+        }
+    }
+
+    renderChatHeader(name, avatarUrl, type) {
+        const chatHeader = document.getElementById('chat-header');
+        if (!chatHeader) return;
+
+        let avatarElement = '';
+        if (type === 'private' && avatarUrl) {
+            avatarElement = `<img src="${avatarUrl}" alt="${name}" class="chat-header-avatar">`;
+        } else if (type === 'private') {
+            // Avatar placeholder per chat private
+            const initials = name.split(' ').map(word => word[0]).join('').toUpperCase();
+            avatarElement = `<div class="chat-header-avatar-placeholder">${initials}</div>`;
+        } else if (type === 'project') {
+            // Icona per progetti
+            avatarElement = `<div class="chat-header-avatar-placeholder">📂</div>`;
+        }
+
+        if (type === 'none') {
+            chatHeader.innerHTML = `<span>${name}</span>`;
+        } else {
+            chatHeader.innerHTML = `
+                <div class="chat-header-content">
+                    ${avatarElement}
+                    <span class="chat-header-name">${name}</span>
+                </div>
+            `;
         }
     }
 
@@ -617,6 +683,8 @@ class MainChat {
         if (this.pollInterval) {
             clearInterval(this.pollInterval);
         }
+        // Reset header quando si chiude la chat
+        this.renderChatHeader('Select a conversation', null, 'none');
     }
 }
 

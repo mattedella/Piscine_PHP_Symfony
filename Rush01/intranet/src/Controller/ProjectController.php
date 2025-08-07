@@ -160,6 +160,8 @@ class ProjectController extends AbstractController
 
         /** @var UploadedFile $uploadedFile */
         $uploadedFile = $request->files->get('project_file');
+        /** @var UploadedFile $bonusFile */
+        $bonusFile = $request->files->get('bonus_file');
 
         if ($uploadedFile) {
             $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
@@ -175,6 +177,21 @@ class ProjectController extends AbstractController
             }
 
             $userProject->setUploadedFilePath($newFilename);
+
+            // Handle bonus file upload
+            if ($bonusFile) {
+                $bonusOriginalFilename = pathinfo($bonusFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $bonusSafeFilename = preg_replace('/[^a-zA-Z0-9_-]/', '_', $bonusOriginalFilename);
+                $bonusNewFilename = $bonusSafeFilename . '-bonus-' . uniqid() . '.' . $bonusFile->guessExtension();
+                try {
+                    $bonusFile->move($uploadDir, $bonusNewFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Failed to upload bonus file.');
+                    return $this->redirectToRoute('project_show', ['id' => $project->getId()]);
+                }
+                $userProject->setBonusFilePath($bonusNewFilename);
+            }
+
             $em->persist($userProject);
 
             // Create evaluation request
@@ -228,17 +245,37 @@ class ProjectController extends AbstractController
         }
 
         $evaluationRequest->setEvaluator($evalSlot->getUserId());
-        // Don't set the evalSlot reference since we're going to delete it immediately
-        
+        $evaluationRequest->setEvalSlotId($evalSlot->getId()); // Track the slot used
         $em->persist($evaluationRequest);
         $em->flush();
 
-        // Delete the evaluation slot immediately after selection
+        // Remove the slot after assignment
         $em->remove($evalSlot);
         $em->flush();
 
+        // Notification: inform evaluator they have been selected
+        $evaluator = $em->getRepository(\App\Entity\User::class)->find($evalSlot->getUserId());
+        if ($evaluator) {
+            $evaluator->addNotification(
+                'You have been selected to evaluate a project: "' . $project->getName() . '". Visit your evaluations page to proceed with the correction.',
+                '/evaluations'
+            );
+            $em->persist($evaluator);
+            $em->flush();
+        }
+
+        // Notification: inform requester their project is awaiting evaluation
+        $requester = $evaluationRequest->getRequester();
+        if ($requester) {
+            $requester->addNotification(
+                'Your project "' . $project->getName() . '" is awaiting evaluation.',
+                '/project/' . $project->getId()
+            );
+            $em->persist($requester);
+            $em->flush();
+        }
+
         $this->addFlash('success', 'Evaluator selected successfully. You will be notified when the evaluation is complete.');
-        
         return $this->redirectToRoute('project_show', ['id' => $project->getId()]);
     }
 
@@ -261,53 +298,89 @@ class ProjectController extends AbstractController
         }
 
         $approved = $request->request->get('approved') === '1';
-        
+        $bonusApproved = $request->request->get('bonus_approved') === '1';
+
         if ($approved) {
             $userProject = $evaluationRequest->getUserProject($em);
             if (!$userProject) {
                 $this->addFlash('error', 'UserProject not found for this evaluation.');
                 return $this->redirectToRoute('evaluations');
             }
-            
             $userProject->setValidated(true);
             $userProject->setValidatedBy($user);
-            
-            // Add XP to the requester
-            $requester = $evaluationRequest->getRequester();
-            $requester->addExperience($evaluationRequest->getProject()->getXp());
-            
+            // Bonus validation logic
+            if ($userProject->getBonusFilePath() && $bonusApproved) {
+                $userProject->setBonusValidated(true);
+                $xp = $evaluationRequest->getProject()->getXp();
+                $xpBonus = (int) round($xp * 1.25);
+                $evaluationRequest->getRequester()->addExperience($xpBonus);
+            } else {
+                $userProject->setBonusValidated(false);
+                $evaluationRequest->getRequester()->addExperience($evaluationRequest->getProject()->getXp());
+            }
             // Deduct 1 evaluation point from requester (user being validated)
+            $requester = $evaluationRequest->getRequester();
             $requester->setEvalPoints($requester->getEvalPoints() - 1);
-            
             // Add 1 evaluation point to evaluator
             $user->setEvalPoints($user->getEvalPoints() + 1);
-            
             $evaluationRequest->setValidated(true);
             $evaluationRequest->setEvaluatedAt(new \DateTime());
-            
             $em->persist($userProject);
             $em->persist($requester);
             $em->persist($user);
             $em->persist($evaluationRequest);
-            
-            $this->addFlash('success', 'Project approved successfully! +1 evaluation point earned.');
+            // Notification: inform requester their project was validated
+            $requester->addNotification(
+                'Your project "' . $evaluationRequest->getProject()->getName() . '" has been validated!',
+                '/project/' . $evaluationRequest->getProject()->getId()
+            );
+            $em->persist($requester);
+            // Remove only the evaluation slot that was used
+            $evalSlotRepo = $em->getRepository(\App\Entity\EvalSlot::class);
+            $evalSlotId = $evaluationRequest->getEvalSlotId();
+            if ($evalSlotId) {
+                $evalSlot = $evalSlotRepo->find($evalSlotId);
+                if ($evalSlot) {
+                    $em->remove($evalSlot);
+                }
+            }
+            $em->flush();
+            $this->addFlash('success', 'Project approved successfully!');
         } else {
             // Project rejected - user can resubmit
-            // Still deduct evaluation point from requester and add to evaluator
+            $userProject = $evaluationRequest->getUserProject($em);
+            if ($userProject) {
+                $userProject->setValidated(false);
+                $userProject->setBonusValidated(false);
+                $em->persist($userProject);
+            }
             $requester = $evaluationRequest->getRequester();
             $requester->setEvalPoints($requester->getEvalPoints() - 1);
             $user->setEvalPoints($user->getEvalPoints() + 1);
-            
             $evaluationRequest->setEvaluator(null);
-            $evaluationRequest->setEvaluatedAt(new \DateTime());            $em->persist($requester);
+            $evaluationRequest->setEvaluatedAt(new \DateTime());
+            $em->persist($requester);
             $em->persist($user);
             $em->persist($evaluationRequest);
-            
-            $this->addFlash('info', 'Project needs more work. The requester can resubmit. +1 evaluation point earned.');
+            // Notification: inform requester their project was rejected
+            $requester->addNotification(
+                'Your project "' . $evaluationRequest->getProject()->getName() . '" was rejected. You can resubmit.',
+                '/project/' . $evaluationRequest->getProject()->getId()
+            );
+            $em->persist($requester);
+            // Remove only the evaluation slot that was used
+            $evalSlotRepo = $em->getRepository(\App\Entity\EvalSlot::class);
+            $evalSlotId = $evaluationRequest->getEvalSlotId();
+            if ($evalSlotId) {
+                $evalSlot = $evalSlotRepo->find($evalSlotId);
+                if ($evalSlot) {
+                    $em->remove($evalSlot);
+                }
+            }
+            $em->flush();
+            $this->addFlash('info', 'Project needs more work. The requester can resubmit.');
         }
-        
         $em->flush();
-        
         return $this->redirectToRoute('evaluations');
     }
 

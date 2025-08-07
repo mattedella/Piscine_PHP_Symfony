@@ -147,6 +147,42 @@
     background: #007bff;
     color: white;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-header-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.chat-header-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.chat-header-avatar-placeholder {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.chat-header-name {
+    font-weight: 600;
+    font-size: 16px;
 }
 
 .chat-messages {
@@ -335,7 +371,8 @@
 }
 
 .conversation-item.active .conversation-time {
-    color: #000;
+    text-align: right;
+    color: #a3a3a3;
 }
 
 .conversation-item.unread {
@@ -362,6 +399,29 @@
     justify-content: center;
     font-weight: bold;
     font-size: 16px;
+    object-fit: cover;
+}
+
+.conversation-avatar-placeholder {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    font-size: 14px;
+}
+
+/* Specific styles for conversation avatars */
+.conversation-item img.conversation-avatar {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    flex-shrink: 0 !important;
+}
+
+.conversation-avatar {
+    object-fit: cover;
+    max-width: 40px;
+    max-height: 40px;
+    min-width: 40px;
+    min-height: 40px;
 }
 
 .conversation-info {
@@ -376,23 +436,47 @@
     margin-bottom: 0.25rem;
 }
 
+.conversation-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    margin-left: auto;
+    margin-top: 0.25rem;
+}
+
 .conversation-name {
     font-weight: 600;
     color: #000;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 0.5rem;
 }
 
 .conversation-time {
-    font-size: 12px;
-    color: #000;
+    text-align: right;
+    font-size: 10px;
+    color: #9c9c9c;
+    min-width: 35px;
+    white-space: nowrap;
 }
 
 .conversation-preview {
-    font-size: 14px;
-    color: #000;
+    font-size: 13px;
+    color: #666;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin-bottom: 0.25rem;
+    max-width: 200px;
+}
+
+.conversation-last-message {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
 }
 
 .conversation-email {
