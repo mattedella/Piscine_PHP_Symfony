@@ -26,7 +26,7 @@ Each exercise is organized into its own directory or controller prefix (e.g. `ex
 - Symfony 2.8 → Symfony 6.4
 - Composer
 - Doctrine ORM
-- MariaDB or SQLite (varies)
+- MYSQL
 - Twig templating
 - Symfony CLI (recommended for Symfony 6.4+ projects)
 
