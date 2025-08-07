@@ -25,7 +25,7 @@ class PersonsOrm
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $enable = null;
+    private bool $enable = false;
 
     #[ORM\Column]
     private ?\DateTime $birthdate = null;
@@ -33,15 +33,16 @@ class PersonsOrm
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $maritalStatus = null;
 
-    #[ORM\OnetoOne(mappedBy: 'person', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'person', targetEntity: BankAccountOrm::class, cascade: ['persist', 'remove'])]
     private ?BankAccountOrm $bankAccount = null;
 
     /** @var Collection<int, AddressOrm> */
-    #[ORM\OnetoMany(mappedBy: 'person', targetEntity: AddressOrm::class, cascade: ['persist', 'remove'])]
-    private $addresses;
+    #[ORM\OneToMany(mappedBy: 'person', targetEntity: AddressOrm::class, cascade: ['persist', 'remove'])]
+    private Collection $addresses;
+
 
     public function __construct() {
-        $this->address = new ArrayCollection();
+        $this->addresses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -126,12 +127,28 @@ class PersonsOrm
         return $this;
     }
 
-    public function getAddresses(): ?AddressOrm {
+    public function getAddresses(): Collection {
         return $this->addresses;
     }
 
-    public function setAddresses(AddressOrm $address): static {
-        $this->addresses = $address;
+    public function addAddress(AddressOrm $address): static
+    {
+        if (!$this->addresses->contains($address)) {
+            $this->addresses[] = $address;
+            $address->setPerson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAddress(AddressOrm $address): static
+    {
+        if ($this->addresses->removeElement($address)) {
+            // Set the owning side to null
+            if ($address->getPerson() === $this) {
+                $address->setPerson(null);
+            }
+        }
 
         return $this;
     }

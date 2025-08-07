@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ex12 List{% endblock %}
+
+{% block body %}
+<h1>People List (Filtered & Sorted using ORM)</h1>
+
+<form method="get">
+    <label>Birth After:
+        <input type="date" name="birth_after" value="{{ filterDate }}">
+    </label>
+    <label>Sort By:
+        <select name="sort">
+            <option value="name" {{ sort == 'name' ? 'selected' : '' }}>Name</option>
+            <option value="birthdate" {{ sort == 'birthdate' ? 'selected' : '' }}>Birthdate</option>
+            <option value="balance" {{ sort == 'balance' ? 'selected' : '' }}>Balance</option>
+        </select>
+    </label>
+    <label>Order:
+        <select name="order">
+            <option value="ASC" {{ order == 'ASC' ? 'selected' : '' }}>Ascending</option>
+            <option value="DESC" {{ order == 'DESC' ? 'selected' : '' }}>Descending</option>
+        </select>
+    </label>
+    <button type="submit">Apply</button>
+</form>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Birthdate</th>
+            <th>City</th>
+            <th>Street</th>
+            <th>IBAN</th>
+            <th>Balance</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for person in people %}
+            <tr>
+                <td>{{ person.name }}</td>
+                <td>{{ person.birthdate|date('Y-m-d') }}</td>
+                <td>{{ person.address?.city ?? 'N/A' }}</td>
+                <td>{{ person.address?.street ?? 'N/A' }}</td>
+                <td>{{ person.bankAccount?.iban ?? 'N/A' }}</td>
+                <td>{{ person.bankAccount?.balance ?? 'N/A' }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="6">No results found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

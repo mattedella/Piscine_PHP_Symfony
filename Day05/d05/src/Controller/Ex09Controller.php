@@ -17,27 +17,21 @@ final class Ex09Controller extends AbstractController
     #[Route('/ex09/create_tables', name: 'ex09_create_tables')]
     public function createSchema(EntityManagerInterface $em): Response
     {
-        $tool = new SchemaTool($em);
+        $schemaTool = new SchemaTool($em);
         $metadata = [
             $em->getClassMetadata(PersonsOrm::class),
             $em->getClassMetadata(BankAccountOrm::class),
             $em->getClassMetadata(AddressOrm::class),
         ];
+    
         try {
-            $conn = $em->getConnection();
-            $sm = method_exists($conn, 'createSchemaManager') ? $conn->createSchemaManager() : $conn->getSchemaManager();
-            $tableName = $metadata[0]->getTableName();
-           if ($sm->tablesExist([$tableName])) {
-               $message = "ℹ️ Table '$tableName' already exists. No action taken.";
-           } else {
-               // Create only your entity table
-               $schemaTool->createSchema($metadata);
-               $message = "✅ Table '$tableName' created successfully.";
-           }
+            // This will only update tables if needed (no duplicate create)
+            $schemaTool->updateSchema($metadata, true);
+            $message = "✅ Tables updated/created successfully.";
         } catch (\Exception $e) {
-            $message = '❌ Failed to create table: ' . $e->getMessage();
+            $message = '❌ Failed to update/create tables: ' . $e->getMessage();
         }
-
+    
         return new Response($message);
     }
 
@@ -131,9 +125,9 @@ final class Ex09Controller extends AbstractController
 
         $address = new AddressOrm();
         $address->setAddress($addressText);
-        $address->setPerson($person);
+        $person->addAddress($address);
 
-        $em->persist($address);
+        $em->persist($person);
         $em->flush();
 
         return $this->redirectToRoute('ex09_new_address', [

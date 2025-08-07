@@ -17,8 +17,8 @@ class AddressOrm
     #[ORM\Column(type: Types::TEXT)]
     private ?string $address = null;
     
-    #[ORM\ManytoOne(inversedBy: 'addresses')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: PersonsOrm::class, inversedBy: 'addresses')]
+    #[ORM\JoinColumn(name: 'person_id', referencedColumnName: 'id', nullable: false)]
     private ?PersonsOrm $person = null;
 
     public function getId(): ?int

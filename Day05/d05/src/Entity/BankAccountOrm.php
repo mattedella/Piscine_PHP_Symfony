@@ -16,8 +16,8 @@ class BankAccountOrm
     #[ORM\Column(length: 100)]
     private ?string $iban = null;
 
-    #[ORM\OnetoOne(inversedBy: 'bankAccount')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\OneToOne(inversedBy: 'bankAccount', targetEntity: PersonsOrm::class)]
+    #[ORM\JoinColumn(name: 'person_id', referencedColumnName: 'id', nullable: false)]
     private ?PersonsOrm $person = null;
 
     public function getId(): ?int

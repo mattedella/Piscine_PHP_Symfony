@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello Ex11Controller!{% endblock %}
+
+{% block body %}
+<h1>Filtered and Sorted People List</h1>
+
+<form method="get">
+    <label>Born After:
+        <input type="date" name="birthdate_after" value="{{ filterDate }}">
+    </label>
+    <label>Sort By:
+        <select name="sort">
+            <option value="p.name" {% if sort == 'p.name' %}selected{% endif %}>Name</option>
+            <option value="p.birthdate" {% if sort == 'p.birthdate' %}selected{% endif %}>Birthdate</option>
+            <option value="b.iban" {% if sort == 'b.iban' %}selected{% endif %}>IBAN</option>
+        </select>
+    </label>
+    <label>Order:
+        <select name="order">
+            <option value="ASC" {% if order == 'ASC' %}selected{% endif %}>Ascending</option>
+            <option value="DESC" {% if order == 'DESC' %}selected{% endif %}>Descending</option>
+        </select>
+    </label>
+    <button type="submit">Apply</button>
+</form>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Birthdate</th>
+            <th>IBAN</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for person in people %}
+            <tr>
+                <td>{{ person.name }}</td>
+                <td>{{ person.email }}</td>
+                <td>{{ person.birthdate|date('Y-m-d') }}</td>
+                <td>{{ person.iban }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">No results found.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

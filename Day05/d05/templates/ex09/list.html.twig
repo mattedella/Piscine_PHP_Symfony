@@ -6,8 +6,8 @@
             <th>Name</th>
             <th>Birthdate</th>
             <th>Marital Status</th>
-            <th>Address</th>
-            <th>Bank Account</th>
+            <th>IBAN</th>
+            <th>Addresses</th>
         </tr>
     </thead>
     <tbody>
@@ -17,20 +17,13 @@
                 <td>{{ person.birthdate ? person.birthdate|date('Y-m-d') : 'N/A' }}</td>
                 <td>{{ person.maritalStatus ?: 'N/A' }}</td>
 
-                <td>
-                    {% for address in person.addresses %}
-                        {{ address.addresses }}<br>
-                    {% else %}
-                        No address
-                    {% endfor %}
-                </td>
+                <td>{{ person.bankAccount is defined and person.bankAccount.iban is defined ? person.bankAccount.iban : 'No bank account' }}</td>
+
 
                 <td>
-                    {% if person.bankAccount %}
-                        {{ person.bankAccount.iban }}
-                    {% else %}
-                        No bank account
-                    {% endif %}
+                    {% for address in person.addresses %}
+                        <li>{{ address.address }}</li>
+                    {% endfor %}
                 </td>
             </tr>
         {% endfor %}
